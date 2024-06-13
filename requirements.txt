@@ -1,6 +1,6 @@
 tensorflow==2.16.1
 typing-extensions
-opencv-python
+opencv-python==4.5.5.64
 keras
 streamlit
 pathlib
