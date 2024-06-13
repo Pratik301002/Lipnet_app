@@ -1,8 +1,8 @@
-tensorflow==2.10.0
-typing-extensions==4.1.1
-opencv-python==4.5.5.64
-keras==2.10.0
-streamlit==1.10.0
-pathlib==1.0.1
-moviepy==1.0.3
+tensorflow
+typing-extensions
+opencv-python
+keras
+streamlit
+pathlib
+moviepy
 imageio
