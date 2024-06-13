@@ -7,6 +7,7 @@ import tensorflow as tf
 from utils import load_data, num_to_char
 from modelutil import load_model
 
+# Function to convert .mpg to .mp4
 def convert_mpg_to_mp4(input_file, output_file):
     try:
         # Load the .mpg file
@@ -20,47 +21,52 @@ def convert_mpg_to_mp4(input_file, output_file):
         st.error(f"Error during conversion: {e}")
         return None
 
+# Streamlit app configuration
 st.set_page_config(layout='wide')
 
-# Setup the sidebar
+# Sidebar setup
 with st.sidebar:
     st.image('https://www.onepointltd.com/wp-content/uploads/2020/03/inno2.png')
     st.title('LipBuddy')
     st.info('This application is originally developed from the LipNet deep learning model.')
 
+# Main app title
 st.title('LipNet Full Stack App')
 
-# Generating a list of options or videos
-options = os.listdir(os.path.join('data', 's1'))
+# List video files in data/s1 folder
+video_folder = os.path.join('data', 's1')
+options = os.listdir(video_folder)
+
+# Selectbox for choosing video
 selected_video = st.selectbox("Choose video", options)
 col1, col2 = st.columns(2)
 
 if options:
-    # Rendering the video
+    # Display video and converted video in first column
     with col1:
         st.info('The video below displays the converted video in mp4 format')
-        file_path = os.path.join('data', 's1', selected_video)
-        output_path = os.path.join("converted_video.mp4")  # Use raw string
-        file_path2 = os.path.join('data', 's1', selected_video)
+        file_path = os.path.join(video_folder, selected_video)
+        output_path = os.path.join("converted_video.mp4")  # Temporary output path
         converted_file = convert_mpg_to_mp4(file_path, output_path)
 
         if converted_file:
-            # Rendering inside of the app
+            # Display converted video
             video = open(output_path, 'rb')
             video_bytes = video.read()
             st.video(video_bytes)
 
+    # Display model-related information in second column
     with col2:
         st.info('This is all the machine learning model sees when making a prediction')
         video, annotations = load_data(tf.convert_to_tensor(file_path))
-        imageio.mimsave("animation.gif",video,fps=10)
-        st.image("animation.gif",width = 500)
+        imageio.mimsave("animation.gif", video, fps=10)
+        st.image("animation.gif", width=500)
 
-        st.info('This is the ouput of our machine learning model as tokens')
+        st.info('This is the output of our machine learning model as tokens')
 
+        # Load and use the machine learning model
         model = load_model()
-
-        y_hat = model.predict(tf.expand_dims(video,axis=0))
+        y_hat = model.predict(tf.expand_dims(video, axis=0))
         decoder = tf.keras.backend.ctc_decode(y_hat, [75], greedy=True)[0][0].numpy()
         st.text(decoder)
 
