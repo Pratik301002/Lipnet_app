@@ -51,7 +51,7 @@ if options:
 
     with col2:
         st.info('This is all the machine learning model sees when making a prediction')
-        video, annotations = load_data(tf.convert_to_tensor(file_path))
+        video, annotations = load_data(tf.convert_to_tensor("data/s1/pbapzp.mpg"))
         
 
         st.info('This is the ouput of our machine learning model as tokens')
