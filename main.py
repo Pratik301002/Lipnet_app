@@ -14,7 +14,7 @@ def convert_mpg_to_mp4(input_file, output_file):
         clip = VideoFileClip(input_file)
 
         # Write the result to a .mp4 file
-        clip.write_videofile(output_file, codec='libx264')
+        clip.write_videofile("converted_video.mp4", codec='libx264')
         return output_file
 
     except Exception as e:
