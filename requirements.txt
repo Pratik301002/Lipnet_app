@@ -1,9 +1,9 @@
 tensorflow
-typing-extensions==4.1.1
-opencv-python==4.5.5.64
+typing-extensions
+opencv-python
 keras
 streamlit
-pathlib==1.0.1
-moviepy==1.0.3
-imageio==2.9.0
+pathlib
+moviepy
+imageio
 
