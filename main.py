@@ -45,7 +45,7 @@ if options:
     # Display video and converted video in first column
     with col1:
         st.info('The video below displays the converted video in mp4 format')
-        file_path = f'data/s1/bbaf2n.mpg'
+        file_path =os.path.join('data', 's1',selected_video)
         output_path = os.path.join("converted_video.mp4")  # Temporary output path
         converted_file = convert_mpg_to_mp4(file_path, output_path)
 
@@ -59,8 +59,7 @@ if options:
     with col2:
         st.info('This is all the machine learning model sees when making a prediction')
         video, annotations = load_data(tf.convert_to_tensor(f'data/s1/{selected_video}'))
-        imageio.mimsave("animation.gif", video, fps=10)
-        st.image("animation.gif", width=500)
+        
 
         st.info('This is the output of our machine learning model as tokens')
 
