@@ -2,7 +2,7 @@ tensorflow==2.10.0
 typing-extensions==4.1.1
 opencv-python==4.5.5.64
 keras==2.10.0
-streamlit
+streamlit==1.10.0
 pathlib
 moviepy
 imageio
