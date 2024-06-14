@@ -6,6 +6,7 @@ import imageio
 import tensorflow as tf
 from utils import load_data, num_to_char
 from modelutil import load_model
+import numpy as np
 
 def convert_mpg_to_mp4(input_file, output_file):
     try:
@@ -40,7 +41,7 @@ if options:
     with col1:
         st.info('The video below displays the converted video in mp4 format')
         file_path = os.path.join('data', 's1', selected_video)
-        output_path = os.path.join('data',"converted_video.mp4")  # Use raw string
+        output_path = os.path.join('data',"converted_video.mp4")
         converted_file = convert_mpg_to_mp4(file_path, output_path)
 
         if converted_file:
@@ -52,14 +53,27 @@ if options:
     with col2:
         st.info('This is all the machine learning model sees when making a prediction')
         video, annotations = load_data(tf.convert_to_tensor(output_path))
-        imageio.mimsave("animation.gif",video,fps=10)
-        st.image("animation.gif",width = 500)
+        
+        # Ensure video is a list of frames (ndarrays)
+        if isinstance(video, np.ndarray):
+            video = [frame for frame in video]
+        
+        # Print type and shape for debugging
+        print(f"Video type: {type(video)}, length: {len(video)}")
+        if len(video) > 0:
+            print(f"First frame shape: {video[0].shape}")
 
-        st.info('This is the ouput of our machine learning model as tokens')
+        try:
+            imageio.mimsave("animation.gif", video, fps=10)
+            st.image("animation.gif", width=500)
+        except Exception as e:
+            st.error(f"Error creating animation: {e}")
+
+        st.info('This is the output of our machine learning model as tokens')
 
         model = load_model()
-
-        y_hat = model.predict(tf.expand_dims(video,axis=0))
+        
+        y_hat = model.predict(tf.expand_dims(video, axis=0))
         decoder = tf.keras.backend.ctc_decode(y_hat, [75], greedy=True)[0][0].numpy()
         st.text(decoder)
 
