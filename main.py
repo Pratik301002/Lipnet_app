@@ -52,7 +52,7 @@ if options:
 
     with col2:
         st.info('This is all the machine learning model sees when making a prediction')
-        video, annotations = load_data(file_path)
+        video, annotations = load_data(tf.convert_to_tensor(file_path))
         st.write(video)
         imageio.mimsave("animation.gif",video,fps=10)
         st.image("animation.gif",width = 500)
