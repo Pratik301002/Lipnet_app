@@ -6,6 +6,7 @@ import imageio
 import tensorflow as tf
 from utils import load_data, num_to_char
 from modelutil import load_model
+import numpy as np
 
 def convert_mpg_to_mp4(input_file, output_file):
     try:
@@ -18,6 +19,15 @@ def convert_mpg_to_mp4(input_file, output_file):
 
     except Exception as e:
         st.error(f"Error during conversion: {e}")
+        return None
+
+def load_video_frames(file_path):
+    try:
+        clip = VideoFileClip(file_path)
+        frames = [frame for frame in clip.iter_frames()]
+        return frames
+    except Exception as e:
+        st.error(f"Error loading video frames: {e}")
         return None
 
 st.set_page_config(layout='wide')
@@ -40,8 +50,7 @@ if options:
     with col1:
         st.info('The video below displays the converted video in mp4 format')
         file_path = os.path.join('data', 's1', selected_video)
-        output_path = os.path.join("converted_video.mp4")  # Use raw string
-      
+        output_path = os.path.join('data',"converted_video.mp4")
         converted_file = convert_mpg_to_mp4(file_path, output_path)
 
         if converted_file:
@@ -52,19 +61,25 @@ if options:
 
     with col2:
         st.info('This is all the machine learning model sees when making a prediction')
-        video_arr, annotations = load_data(tf.convert_to_tensor(file_path))
-        st.write(video_arr)
-        imageio.mimsave("animation.gif",video_arr,fps=10)
-        st.image("animation.gif",width = 500)
+        
+        # Load the video frames
+        video_frames = load_video_frames(output_path)
+        
+        if video_frames:
+            # Save the frames as a gif
+            imageio.mimsave("animation.gif", video_frames, fps=10)
+            st.image("animation.gif", width=500)
 
-        st.info('This is the ouput of our machine learning model as tokens')
+            st.info('This is the output of our machine learning model as tokens')
 
-        model = load_model()
+            model = load_model()
 
-        y_hat = model.predict(tf.expand_dims(video,axis=0))
-        decoder = tf.keras.backend.ctc_decode(y_hat, [75], greedy=True)[0][0].numpy()
-        st.text(decoder)
+            # Prepare the frames for the model
+            video_tensor = tf.convert_to_tensor(video_frames, dtype=tf.float32)
+            y_hat = model.predict(tf.expand_dims(video_tensor, axis=0))
+            decoder = tf.keras.backend.ctc_decode(y_hat, [75], greedy=True)[0][0].numpy()
+            st.text(decoder)
 
-        st.info('Decode the raw tokens into words')
-        converted_prediction = tf.strings.reduce_join(num_to_char(decoder)).numpy().decode('utf-8')
-        st.text(converted_prediction)
+            st.info('Decode the raw tokens into words')
+            converted_prediction = tf.strings.reduce_join(num_to_char(decoder)).numpy().decode('utf-8')
+            st.text(converted_prediction)
