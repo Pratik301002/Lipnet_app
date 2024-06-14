@@ -13,7 +13,7 @@ num_to_char = keras.layers.StringLookup(
 )
 
 def load_video(path:str) -> List[float]:
-    #print(path)
+
     cap = cv2.VideoCapture(path)
     frames = []
     for _ in range(int(cap.get(cv2.CAP_PROP_FRAME_COUNT))):
