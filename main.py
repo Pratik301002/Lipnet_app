@@ -52,7 +52,7 @@ if options:
 
     with col2:
         st.info('This is all the machine learning model sees when making a prediction')
-        video, annotations = load_data(tf.convert_to_tensor(output_path))
+        video, annotations = load_data(tf.convert_to_tensor(input_path))
         
         # Ensure video is a list of frames (ndarrays)
         if isinstance(video, np.ndarray):
