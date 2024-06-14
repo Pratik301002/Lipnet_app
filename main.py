@@ -57,7 +57,7 @@ if options:
         # Ensure video is a list of frames (ndarrays)
         if isinstance(video, np.ndarray):
             video = [frame for frame in video]
-        
+        st.write(video)
         # Print type and shape for debugging
         print(f"Video type: {type(video)}, length: {len(video)}")
         if len(video) > 0:
