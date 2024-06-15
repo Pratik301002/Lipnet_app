@@ -53,19 +53,11 @@ if options:
 
     with col2:
         st.info('This is all the machine learning model sees when making a prediction')
-        video = load_data(tf.convert_to_tensor(file_path))
+        video = load_data(file_path)
         st.write(video)
         imageio.mimsave("animation.gif",video,fps=10)
         st.image("animation.gif",width = 500)
 
         st.info('This is the ouput of our machine learning model as tokens')
 
-        model = load_model()
-
-        y_hat = model.predict(tf.expand_dims(video,axis=0))
-        decoder = tf.keras.backend.ctc_decode(y_hat, [75], greedy=True)[0][0].numpy()
-        st.text(decoder)
-
-        st.info('Decode the raw tokens into words')
-        converted_prediction = tf.strings.reduce_join(num_to_char(decoder)).numpy().decode('utf-8')
-        st.text(converted_prediction)
+       
