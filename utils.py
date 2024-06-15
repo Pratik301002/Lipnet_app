@@ -20,7 +20,7 @@ def load_video(path:str) -> List[float]:
         ret, frame = cap.read()
         frame = tf.image.rgb_to_grayscale(frame)
         frames.append(frame[190:236,80:220,:])
-    cap.release()
+    
 
     mean = tf.math.reduce_mean(frames)
     std = tf.math.reduce_std(tf.cast(frames, tf.float32))
