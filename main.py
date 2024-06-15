@@ -5,7 +5,7 @@ from moviepy.editor import VideoFileClip
 import imageio
 import tensorflow as tf
 from utils import load_data, num_to_char
-from modelutil import load_model
+
 
 def convert_mpg_to_mp4(input_file, output_file):
     try:
@@ -39,6 +39,7 @@ if options:
     # Rendering the video
     with col1:
         st.info('The video below displays the converted video in mp4 format')
+        
         file_path = os.path.join('data', 's1', selected_video)
         output_path = os.path.join("converted_video.mp4")  # Use raw string
 
